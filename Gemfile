@@ -11,6 +11,13 @@ gem 'jbuilder', '~> 2.5'
 gem 'faker'
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'sass-rails', '>= 3.2'
+gem 'rspec-rails'
+gem 'launchy'
+gem 'capybara'
+gem 'faraday'
+gem 'pry'
+gem 'database_cleaner'
+gem 'factory_girl_rails'
 
 group :development, :test do
   gem 'byebug', platform: :mri

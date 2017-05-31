@@ -10,6 +10,8 @@ class DestinationsController < ApplicationController
   # GET /destinations/1
   # GET /destinations/1.json
   def show
+    @destination = Destination.find(params[:id])
+    @destination_weathers = DestinationWeatherService.new(@destination.zip).forecast
   end
 
   # GET /destinations/new
