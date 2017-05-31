@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Destinations API' do
-  it 'can GET a list of items' do
+  it 'can GET a list of destination' do
     destinations = create_list(:destination, 5)
 
     get '/api/v1/destinations'
@@ -9,70 +9,67 @@ RSpec.describe 'Destinations API' do
     expect(response).to be_success
     expect(response.status).to eq(200)
 
-    response_items = JSON.parse(response.body)
+    response_destination = JSON.parse(response.body, symbolize_names: true)
 
-    expect(response_items.count).to eq(5)
-    expect(response_items.first["id"]).to eq(items.first.id)
-    expect(response_items.first["name"]).to eq(items.first.name)
-    expect(response_items.first["description"]).to eq(items.first.description)
-    expect(response_items.first["image_url"]).to eq(items.first.image_url)
-    expect(response_items.first["created_at"]).to eq(nil)
-    expect(response_items.first["updated_at"]).to eq(nil)
+    expect(response_destination.count).to eq(5)
+    expect(response_destination.first[:id]).to eq(destination.first.id)
+    expect(response_destination.first[:name]).to eq(destination.first.name)
+    expect(response_destination.first[:zip]).to eq(destination.first.zip)
+    expect(response_destination.first[:description]).to eq(destination.first.description)
+    expect(response_destination.first[:image_url]).to eq(destination.first.image_url)
   end
 
-  it 'can SHOW a single item' do
-    item = create(:item)
+  it 'can SHOW a single destination' do
+    destination = create(:destination)
 
-    get "/api/v1/items/#{item.id}"
+    get "/api/v1/destination/#{destination.id}"
 
     expect(response).to be_success
     expect(response.status).to eq(200)
 
-    response_item = JSON.parse(response.body)
+    response_destination = JSON.parse(response.body)
 
-    expect(response_item["id"]).to eq(item.id)
-    expect(response_item["name"]).to eq(item.name)
-    expect(response_item["description"]).to eq(item.description)
-    expect(response_item["image_url"]).to eq(item.image_url)
-    expect(response_item["created_at"]).to eq(nil)
-    expect(response_item["updated_at"]).to eq(nil)
+    expect(response_destination[:id]).to eq(destination.id)
+    expect(response_destination[:name]).to eq(destination.name)
+    expect(response_destination[:description]).to eq(destination.description)
+    expect(response_destination[:image_url]).to eq(destination.image_url)
   end
 
-  it 'can CREATE an item' do
-    item_params = attributes_for(:item)
+  it 'can CREATE an destination' do
+    destination_params = attributes_for(:destination)
 
-    expect{ post "/api/v1/items/", item: item_params }.to change(Item, :count).by(1)
+    expect{ post "/api/v1/destination/", destination: destination_params }.to change(Destination, :count).by(1)
 
     expect(response).to be_success
     expect(response.status).to eq(200)
-    expect(item_params[:name]).to eq(Item.last.name)
-    expect(item_params[:description]).to eq(Item.last.description)
-    expect(item_params[:image_url]).to eq(Item.last.image_url)
+    expect(destination_params[:name]).to eq(Destination.last.name)
+    expect(destination_params[:description]).to eq(Destination.last.description)
+    expect(destination_params[:image_url]).to eq(Destination.last.image_url)
   end
 
-  it 'can UPDATE an item' do
-    item = create(:item)
+  it 'can UPDATE an destination' do
+    destination = create(:destination)
     description = Faker::Lorem.sentence
 
-    put "/api/v1/items/#{item.id}", item: {description: description}
+    put "/api/v1/destination/#{destination.id}", destination: {description: description}
 
-    response_item = JSON.parse(response.body)
+    response_destination = JSON.parse(response.body)
 
     expect(response).to be_success
     expect(response.status).to eq(200)
-    expect(response_item["id"]).to eq(item.id)
-    expect(response_item["description"]).to eq(description)
+    expect(response_destination[:id]).to eq(destination.id)
+    expect(response_destination[:description]).to eq(description)
   end
 
-  it 'can DESTROY an item' do
-    item = create(:item)
-    id = item.id
+  it 'can DESTROY an destination' do
+    destination = create(:destination)
+    id = destination.id
 
-    expect{ delete "/api/v1/items/#{id}" }.to change(Item, :count).by(-1)
+    expect{ delete "/api/v1/destination/#{id}" }.to change(Destination, :count).by(-1)
 
     expect(response).to be_success
     expect(response.status).to eq(204)
-    expect{ Item.find(id) }.to raise_error(ActiveRecord::RecordNotFound)
+    # expect id to not be present
   end
 end
 
